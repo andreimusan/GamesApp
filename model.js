@@ -47,5 +47,78 @@ function deleteGame(gameID) {
         return r.text();
     }).then(function(apiResponse){
         console.log(apiResponse);
+        location.reload(true);
+    });
+}
+
+document.querySelector(".submit-Btn").addEventListener("click", function(event){
+    event.preventDefault();
+
+    const gameTitle = document.getElementById("gameTitle");
+    const gameDescription = document.getElementById("gameDescription");
+    const gameGenre = document.getElementById("gameGenre");
+    const gamePublisher = document.getElementById("gamePublisher");
+    const gameImageUrl = document.getElementById("gameImageUrl");
+    const gameRelease = document.getElementById("gameRelease");
+
+    validateFormElement(gameTitle, "The title is required!");
+    validateFormElement(gameGenre, "The genre is required!");
+    validateFormElement(gameImageUrl, "The image URL is required!");
+    validateFormElement(gameRelease, "The release date is required!");
+
+    validateReleaseTimestampElement(gameRelease, "The release date provided is not a valid timestamp!");
+
+    if (gameTitle.value !== "" || gameGenre.value !== "" || gameImageUrl.value !== "" || gameRelease.value !== "") {
+        
+        const requestParams = {
+            title : gameTitle,
+            releaseDate : gameRelease,
+            genre : gameGenre,
+            publisher : gamePublisher,
+            imageUrl : gameImageUrl,
+            description : gameDescription
+        }
+
+        createGameRequest(requestParams);
+    }
+});
+
+function validateFormElement(inputElement, errorMessage) {
+    console.log(inputElement.value);
+
+    if (inputElement.value === "") {
+        if (!document.querySelector('[rel="'+ inputElement.id +'"]')) {
+            buildErrorMessage(inputElement, errorMessage);
+        }
+    } else {
+        if (document.querySelector('[rel="'+ inputElement.id +'"]')) {
+            document.querySelector('[rel="'+ inputElement.id +'"]').remove();
+            inputElement.classList.remove("inputError");
+        }
+    }
+}
+
+function validateReleaseTimestampElement(inputElement, errorMessage) {
+    if (isNaN(inputElement.value) && inputElement.value !== "") {
+        buildErrorMessage(inputElement, errorMessage);
+    }
+}
+
+function buildErrorMessage(inputEl, errorMsg) {
+    inputEl.classList.add("inputError");
+    const errorMsg = document.createElement("span");
+    errorMsg.setAttribute("rel", inputEl.id)
+    errorMsg.classList.add("errorMsg");
+    errorMsg.innerHTML = errorMsg;
+    inputEl.after(errorMsg);
+}
+
+function createGameRequest(gameObject) {
+    fetch(apiURL + "/games", {
+        method: "POST",
+        headers : {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body : JSON.stringify(gameObject)
     });
 }
