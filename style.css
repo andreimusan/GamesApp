@@ -132,10 +132,11 @@ h1 {
 }
 
 /* for view2.js */
-.updateForm p {
+.updateForm span {
     color: red;
     margin: 0 10px;
     border: 1px solid red;
     border-radius: 5px;
     padding: 10px;
+    align-self: flex-start;
 }
