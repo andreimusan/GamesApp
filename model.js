@@ -17,7 +17,6 @@ function getGamesList(callbackFunction){
     });
 }
 
-
 function deleteGame(gameID, callbackFunction) {
     fetch(apiURL + "/games/" + gameID, {
         method: "DELETE"
@@ -28,8 +27,6 @@ function deleteGame(gameID, callbackFunction) {
     });
 
 }
-
-
 
 function createGameRequest(gameObject, callbackCreateGame){
     fetch(apiURL + "/games", {
@@ -46,38 +43,19 @@ function createGameRequest(gameObject, callbackCreateGame){
     });
 }
 
-
-/*function updateGameRequest(updatedGameObj, callbackCreateGame){
-    fetch(apiURL + "/games", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: gameObject
-    }).then(function(response){
-        return response.json();
-    }).then(function(updatedGame){
-        //console.log(updatedGame);
-        callbackCreateGame(updatedGame);
-    });
-}*/
-
-/*function reloadData(callback) {
+function reloadData() {
     fetch(apiURL + "/regenerate-games", {
         method: "GET",
         headers: {
             'Content-Type' : "application/x-www-form-urlencoded"
         }
     }).then(function(response){
-        //console.log("raspunsul este:", response);
         return response.text();
     }).then(function(regenerateGame){
-        //console.log("raspuns request: ", regenerateGame);
-        callback(regenerateGame);
     })
 }
-*/
-function editGame(id, gameObject1,callback){
+
+function editGame(id, updatedGameObject, callback){
   console.log(id)
   console.log(gameObject1)
     fetch(`${apiURL}/games/${id}`, {
@@ -85,21 +63,11 @@ function editGame(id, gameObject1,callback){
         headers: {
             'Content-Type' : "application/x-www-form-urlencoded"
         },
-        body: gameObject1
-        /*JSON.stringify({
-            title: 'text',
-            description: '',
-            imageUrl: ''
-        })*/
+        body: updatedGameObject
     }).then(function(response){
-        console.log("raspunsul de la server este: ",response )
         return response.text();
     }).then(function(editGameResponse) {
-       callback(editGameResponse)
-        console.log("raspuns PUT: ", editGameResponse)
-    }).catch(err =>  {
-        console.log('my error from put is: ', err);
-        
+       callback(editGameResponse)  
     })
 }
 
