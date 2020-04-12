@@ -56,8 +56,6 @@ function reloadData() {
 }
 
 function editGame(id, updatedGameObject, callback){
-  console.log(id)
-  console.log(gameObject1)
     fetch(`${apiURL}/games/${id}`, {
         method: "PUT",
         headers: {
@@ -70,16 +68,3 @@ function editGame(id, updatedGameObject, callback){
        callback(editGameResponse)  
     })
 }
-
-
-
-
-
-
-
-
-// "application/json"
-// {"cheie": "valoare", "cheie2": "valoare2"}
-
-//application/x-www-form-urlencoded
-// cheie=valoare&cheie2=valoare

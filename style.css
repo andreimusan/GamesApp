@@ -130,3 +130,12 @@ h1 {
 .container {
     margin: 0 10px;
 }
+
+/* for view2.js */
+.updateForm p {
+    color: red;
+    margin: 0 10px;
+    border: 1px solid red;
+    border-radius: 5px;
+    padding: 10px;
+}
