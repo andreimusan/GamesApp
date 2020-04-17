@@ -1,4 +1,4 @@
-getGamesList(function(arrayOfGames){
+getGamesList().then(function(arrayOfGames){
     for (var i = 0; i < arrayOfGames.length; i++) {
         createDomElement(arrayOfGames[i]);
         
@@ -22,8 +22,7 @@ function createDomElement(gameObj){
     
     document.getElementById(`${gameObj._id}`).addEventListener("click", function(){
         if (event.target.classList.contains('delete-btn')) {
-                deleteGame(gameELement.getAttribute("id"), function(apiResponse){
-                    console.log('apiResponse ',apiResponse);
+                deleteGame(gameELement.getAttribute("id")).then(function(apiResponse){
                     removeDeletedElementFromDOM(gameELement);
                 });
         } else if (event.target.classList.contains('edit-btn')) {
@@ -36,8 +35,6 @@ function createUpdateForm(gameContainer) {
     if (!gameContainer.querySelector('#updateForm')) {
 
         if (document.querySelector('#updateForm')) {
-            document.querySelector('h1').contentEditable = false;
-            document.querySelector('.description').contentEditable = false;
             document.querySelector('#updateForm').remove();
         }
         
@@ -52,53 +49,51 @@ function createUpdateForm(gameContainer) {
         var formElement = document.createElement('form');
         formElement.setAttribute('id', 'updateForm');   
         formElement.classList.add('updateForm');     
-        formElement.innerHTML =  `<label for="updatedGameImageUrl">Image URL</label>
+        formElement.innerHTML =  `<label for="updatedGameTitle">Title</label>
+                                <input type="text" value="${gameTitle.innerText}" name="gameTitle" id="updatedGameTitle" />
+                        
+                                <label for="updatedGameDescription">Description</label>
+                                <textarea name="gameDescription" id="updatedGameDescription">${gameDescription.textContent}</textarea>
+                        
+                                <label for="updatedGameImageUrl">Image URL</label>
                                 <input type="text" value="${gameImageURL.src}" name="gameImageUrl" id="updatedGameImageUrl" />
 
                                 <div>
                                     <button class="updateBtn">Save</button>
                                     <button class="cancelBtn">Cancel</button>
-                                </div>
-                                <span>The game details above are now editable. You can change the Title, Description and Image URL.</span>`;
+                                </div>`;
         gameContainer.appendChild(formElement); 
-
-        gameContainer.querySelector('h1').contentEditable = true;
-        gameContainer.querySelector('.description').contentEditable = true;
         
         gameContainer.querySelector('.cancelBtn').addEventListener('click', function(){
-            gameContainer.querySelector('h1').contentEditable = false;
-            gameContainer.querySelector('.description').contentEditable = false;
             removeDeletedElementFromDOM(formElement);
         });
 
         gameContainer.querySelector('.updateBtn').addEventListener('click', function(){
             event.preventDefault();
-
-            gameContainer.querySelector('h1').contentEditable = false;
-            gameContainer.querySelector('.description').contentEditable = false;
-
+            const updatedGameTitle = document.querySelector('#updatedGameTitle');
+            const updatedGameDescription = document.querySelector('#updatedGameDescription');
             const updatedGameImageUrl = document.querySelector('#updatedGameImageUrl');
 
             var urlencoded = new URLSearchParams();
-            urlencoded.append("title", gameTitle.textContent);
-            urlencoded.append("description", gameDescription.textContent);
+            urlencoded.append("title", updatedGameTitle.value);
+            urlencoded.append("description", updatedGameDescription.value);
             urlencoded.append("imageUrl", updatedGameImageUrl.value);
 
-            if(updatedGameImageUrl.value !== "") {
+            if (updatedGameTitle.value !== "" && updatedGameDescription.value !== "" && updatedGameImageUrl.value !== "") {
                 
+                gameContainer.querySelector('h1').innerText = updatedGameTitle.value;
+                gameContainer.querySelector('.description').innerText = updatedGameDescription.value;
                 gameContainer.querySelector('.imageUrl').src = updatedGameImageUrl.value;
                 removeDeletedElementFromDOM(formElement);
-            }  
+            }
             
-            if(gameTitle.textContent !== oldTitle || gameDescription.textContent !== oldDescription || updatedGameImageUrl.value !== oldImageURL){
-                editGame(gameContainer.id, urlencoded, function(editGameResponse){
-                    console.log('Raspuns callback PUT ',editGameResponse);                   
+            if (updatedGameTitle.value !== oldTitle || updatedGameDescription.value !== oldDescription || updatedGameImageUrl.value !== oldImageURL){
+                editGame(gameContainer.id, urlencoded).then(function(editGameResponse){
+                    console.log('Raspuns callback PUT ', editGameResponse);                   
                 })
             }
         });
     } else {
-        document.querySelector('h1').contentEditable = false;
-        document.querySelector('.description').contentEditable = false;
         gameContainer.querySelector('#updateForm').remove();
     }
 }
@@ -162,11 +157,18 @@ document.querySelector(".submitBtn").addEventListener("click", function(event){
         urlencoded.append("imageUrl", gameImageUrl.value);
         urlencoded.append("description", gameDescription.value);
 
-        createGameRequest(urlencoded, createDomElement);
+        createGameRequest(urlencoded).then(createDomElement);
     }
+
+    gameTitle.value = "";
+    gameRelease.value = "";
+    gameGenre.value = "";
+    gamePublisher.value = "";
+    gameImageUrl.value = "";
+    gameDescription.value = "";
 })
 
-//probabil ca nu e o practica buna dar ne-am jucat putin
+// probabil ca nu e o practica buna dar ne-am jucat putin
 const reloadDataBase = document.createElement('button');
 reloadDataBase.setAttribute('class', 'reloadDB');
 reloadDataBase.innerHTML = "Reload DataBase";
@@ -184,6 +186,6 @@ reloadDataBase.addEventListener('click', function() {
 
     const alertBox = confirm("Do you really want to reload DataBase ?")
     if (alertBox === true) {
-        reloadData()
+        reloadData().then(function(response){})
     }
 })
