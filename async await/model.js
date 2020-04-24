@@ -1,4 +1,4 @@
-var apiURL = "https://games-world.herokuapp.com";
+var apiURL = "https://games-app-siit.herokuapp.com";
 
 async function getGamesList(){
     const response = await fetch(`${apiURL}/games`, {

@@ -130,6 +130,7 @@ function buildErrorMessage(inputEl, errosMsg){
     errorMsgElement.setAttribute("rel", inputEl.id);
     errorMsgElement.classList.add("errorMsg");
     errorMsgElement.innerHTML = errosMsg;
+    console.log(errorMsgElement)
     inputEl.after(errorMsgElement);
 }
 
@@ -161,6 +162,7 @@ document.querySelector(".submitBtn").addEventListener("click", function(event){
 
         (async function() {
             const request = await createGameRequest(urlencoded);
+            console.log(request)
             return createDomElement(request);
         })();
     }

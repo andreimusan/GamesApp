@@ -1,4 +1,4 @@
-var apiURL = "https://games-world.herokuapp.com";
+var apiURL = "https://games-app-siit.herokuapp.com";
 
 function getGamesList(callbackFunction){
     fetch(apiURL + "/games", {

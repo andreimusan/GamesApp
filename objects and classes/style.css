@@ -1,0 +1,130 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+h1.myh {
+    text-align: center;
+    color: #333333;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 30px;
+    text-shadow: 1px 1px 3px #333333;
+    border-bottom: 5px solid #333333;
+    margin-bottom: 50px;
+    padding-bottom: 10px;
+}
+.delete-btn {
+    width: 120px;
+    height: 40px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: #E74C3C;
+    font-weight: bold;
+    border: none;
+    color: white;
+}
+.editBtn {
+    width: 120px;
+    height: 40px;
+    border-radius: 5px;
+    font-weight: bold;
+    background-color:#16A085;
+    border: none;
+    color: white;
+}
+.submitBtn {
+    width: 120px;
+    height: 40px;
+    border-radius: 5px;
+    font-weight: bold;
+    background-color: #2ECC71;
+    border: none;
+    color: white;
+}
+
+img {
+    width: 90px;
+    float:left;
+    margin: 10px;
+}
+
+h1 {
+    color: blue;
+    font-size: 18px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+button {
+    margin: 10px;
+}
+
+.creationForm {
+    display: flex;
+    flex-direction: column;
+}
+
+.creationForm>label,
+.creationForm>input,
+.creationForm>textarea,
+.creationForm>select
+ {
+    display: block;
+    margin: 5px 10px;
+}
+
+.inputError {
+    border: 1px solid red;
+}
+
+.errorMsg {
+    margin-left: 10px;
+    color: red;
+    display: block;
+    font-size: 14px;
+}
+
+#updateForm {
+   border: 1px solid #333;
+   padding: 20px;
+   display: flex;
+   flex-direction: column;
+   margin: 5px;
+}
+.updateBtn{
+    width: 120px;
+    height: 40px;
+    border-radius: 5px;
+    font-weight: bold;
+    background-color: #3498DB;
+    border: none;
+    color: white;
+    
+   
+}
+.cancelBtn{
+    width: 120px;
+    height: 40px;
+    border-radius: 5px;
+    font-weight: bold;
+    background-color: #E74C3C;
+    border: none;
+    color: white;
+}
+
+#updateForm>label,
+#updateForm>input,
+#updateForm>textarea,
+#updateForm>select
+ {
+    display: block;
+    margin-left: 5px;
+    padding: 5px 10px;
+}
+
+#updateForm > textarea {
+    height: 150px;
+}
+#updateForm>label {
+    font-weight: bold;
+}
