@@ -1,45 +1,37 @@
-const apiServer = new fetchAPI('https://games-app-siit.herokuapp.com');
-
+const apiServer = new FetchAPI('https://games-app-siit.herokuapp.com');
 
 (async function gamesFromServer() {
-    const gameServerRequest = await apiServer.getGameList();
-    for(let i = 0; i < gameServerRequest.length; i++) {
-        const takeGames = gameServerRequest[i];
+    const arrayOfGames = await apiServer.getGameList();
+    for(let i = arrayOfGames.length-1; i >= 0 ; i--) {
+        const gameObj = arrayOfGames[i];
         
         //obiect nou creat cu ajutorul functiei contructor din gamesListPosts.js
-        const postDOM = new gamePost(
-            takeGames._id,
-            takeGames.title,
-            takeGames.imageUrl,
-            takeGames.description
-            )
+        const game = new Game(
+            gameObj._id,
+            gameObj.title,
+            gameObj.imageUrl,
+            gameObj.description
+        )
         
-        const postGamesInDom = postDOM.displayGames();
-        document.querySelector('.container').appendChild(postGamesInDom);
+        const postGameInDom = game.displayGame();
+        document.querySelector('.container').appendChild(postGameInDom);
        
-       
-        document.getElementById(`${postDOM._id}`).addEventListener("click", async function(){
-
-            
-                if (event.target.classList.contains('delete-btn')) {
-                    const divId = event.target.parentElement.getAttribute('id');
-                    const delGame = await apiServer.deleteGame(divId);
-                   
-                    if(delGame.succes){
-                        removeDeletedElementFromDOM(document.querySelector('.divContainer'));
-                        
-                    } else {
-                        alert("Could not delete game, something went wrong");
-                    } 
-                }else if (event.target.classList.contains('editBtn')) {
-            
-                        createEditForm(event.target.parentElement)
-                        
-            }   
-            });
-
+        document.getElementById(`${game._id}`).addEventListener("click", async function(){
+            if (event.target.classList.contains('delete-btn')) {
+                const divId = event.target.parentElement.getAttribute('id');
+                const gameID = document.getElementById(`${game._id}`);
+                const delGame = await apiServer.deleteGame(divId);
+                
+                if(delGame.succes){
+                    removeDeletedElementFromDOM(gameID);
+                } else {
+                    alert("Could not delete game, something went wrong");
+                } 
+            } else if (event.target.classList.contains('edit-btn')) {
+                createEditForm(event.target.parentElement)                    
+        }   
+        });
     }
-    
 })();
 
 function createEditForm(gameContainer) {
@@ -59,7 +51,8 @@ function createEditForm(gameContainer) {
         const oldImageURL = gameImageURL.src;
       
         const formElement = document.createElement('form');
-        formElement.setAttribute('id', 'updateForm');    
+        formElement.setAttribute('id', 'updateForm'); 
+        formElement.classList.add('updateForm');     
         formElement.innerHTML =  `<label for="updatedGameTitle">Title</label>
                                 <input type="text" value="${gameTitle.textContent}" name="gameTitle" id="updatedGameTitle" />
                         
@@ -83,6 +76,8 @@ function createEditForm(gameContainer) {
             const updatedGameDescription = document.querySelector('#updatedGameDescription');
             const updatedGameImageUrl = document.querySelector('#updatedGameImageUrl');
 
+            const gameContainerElement = event.target.parentElement.parentElement.parentElement;
+
             const urlencoded = new URLSearchParams();
             urlencoded.append("title", updatedGameTitle.value);
             urlencoded.append("description", updatedGameDescription.value);
@@ -90,18 +85,17 @@ function createEditForm(gameContainer) {
 
             if (updatedGameTitle.value !== "" && updatedGameDescription.value !== "" && updatedGameImageUrl.value !== "") {
                 
-                gameContainer.querySelector('h1').innerText = updatedGameTitle.value;
-                gameContainer.querySelector('.description').innerText = updatedGameDescription.value;
-                gameContainer.querySelector('.imageUrl').src = updatedGameImageUrl.value;
+                gameContainerElement.querySelector('h1').innerText = updatedGameTitle.value;
+                gameContainerElement.querySelector('.description').innerText = updatedGameDescription.value;
+                gameContainerElement.querySelector('.imageUrl').src = updatedGameImageUrl.value;
                 removeDeletedElementFromDOM(formElement);
             }
             
             if (updatedGameTitle.value !== oldTitle || updatedGameDescription.value !== oldDescription || updatedGameImageUrl.value !== oldImageURL){
                 (async function(){
-                    const gameEditor = await apiServer.editGame(gameContainer.id, urlencoded);
+                    const gameEditor = await apiServer.editGame(gameContainerElement.id, urlencoded);
                     return gameEditor;
                 })();
-                
             }
         });
     } else {
@@ -117,15 +111,13 @@ function removeDeletedElementFromDOM(domElement){
 document.querySelector(".submitBtn").addEventListener("click", function(event) {
     event.preventDefault();
 
-    const createdGame = new createGameForm(document.getElementById("gameTitle"), 
-                                            document.getElementById("gameRelease"), 
-                                            document.getElementById("gameGenre"), 
-                                            document.getElementById("gamePublisher"), 
-                                            document.getElementById("gameImageUrl"), 
-                                            document.getElementById("gameDescription"));
-
-
-
+    const createdGame = new GameCreator(document.getElementById("gameTitle"), 
+                                        document.getElementById("gameRelease"), 
+                                        document.getElementById("gameGenre"), 
+                                        document.getElementById("gamePublisher"), 
+                                        document.getElementById("gameImageUrl"), 
+                                        document.getElementById("gameDescription"));
+    
     createdGame.validateFormElement(createdGame.title, "The title is required!");
     createdGame.validateFormElement(createdGame.genre, "The genre is required!");
     createdGame.validateFormElement(createdGame.publisher, "The image URL is required!");
@@ -142,29 +134,55 @@ document.querySelector(".submitBtn").addEventListener("click", function(event) {
         urlencoded.append("imageUrl", createdGame.imageUrl.value);
         urlencoded.append("description", createdGame.description.value);
 
-       
-
-        (async function createGame() {
-            const request = await apiServer.createGameRequest(urlencoded);
-            console.log(request);
-            const newGameInDom = createdGame.displayCreatedGame(request);
-            document.querySelector('.container').appendChild(newGameInDom);
-            
-        })();
+        displayCreatedGame(urlencoded);
     }
+
+    gameTitle.value = "";
+    gameRelease.value = "";
+    gameGenre.value = "";
+    gamePublisher.value = "";
+    gameImageUrl.value = "";
+    gameDescription.value = "";
 });
+
+async function displayCreatedGame(urlencoded) {
+    const request = await apiServer.createGameRequest(urlencoded);
+     
+    const game = new Game(request._id,
+                        request.title,
+                        request.imageUrl,
+                        request.description)
+    
+    const addGame = game.displayGame();
+    
+    const allGamesContainer = document.querySelector('.container');
+    allGamesContainer.insertBefore(addGame, allGamesContainer.childNodes[0]);
+    
+    document.getElementById(`${request._id}`).addEventListener("click", async function(){
+        if (event.target.classList.contains('delete-btn')) {
+            const divId = event.target.parentElement.getAttribute('id');
+            const gameID = document.getElementById(`${game._id}`);
+            const delGame = await apiServer.deleteGame(divId);
+
+            if(delGame.succes){
+                removeDeletedElementFromDOM(gameID);
+            } else {
+                alert("Could not delete game, something went wrong");
+            } 
+        } else if (event.target.classList.contains('edit-btn')) {
+                createEditForm(event.target.parentElement)  
+        }   
+    }); 
+}
 
 async function reload() {
     const reloadDataBase = document.createElement('button');
     reloadDataBase.setAttribute('class', 'reloadDB');
     reloadDataBase.innerHTML = "Reload DataBase";
     reloadDataBase.style.width = "200px";
-    reloadDataBase.style.position = "relative";
-    reloadDataBase.style.left = "150px"; 
-    reloadDataBase.style.top = "-55px"; 
     reloadDataBase.style.padding = "10px";
     reloadDataBase.style.cursor = "pointer";
-    reloadDataBase.style.backgroundColor = "#E67E22";
+    reloadDataBase.style.backgroundColor = "slategray";
     reloadDataBase.style.color = "white";
     reloadDataBase.style.fontWeight = "bold";
     reloadDataBase.style.border = "none";

@@ -69,11 +69,13 @@ function createUpdateForm(gameContainer) {
             removeDeletedElementFromDOM(formElement);
         });
 
-        gameContainer.querySelector('.updateBtn').addEventListener('click', function(){
+        gameContainer.querySelector('.updateBtn').addEventListener('click', function(event){
             event.preventDefault();
             const updatedGameTitle = document.querySelector('#updatedGameTitle');
             const updatedGameDescription = document.querySelector('#updatedGameDescription');
             const updatedGameImageUrl = document.querySelector('#updatedGameImageUrl');
+
+            const gameContainerElement = event.target.parentElement.parentElement.parentElement;
 
             var urlencoded = new URLSearchParams();
             urlencoded.append("title", updatedGameTitle.value);
@@ -82,15 +84,15 @@ function createUpdateForm(gameContainer) {
 
             if (updatedGameTitle.value !== "" && updatedGameDescription.value !== "" && updatedGameImageUrl.value !== "") {
                 
-                gameContainer.querySelector('h1').innerText = updatedGameTitle.value;
-                gameContainer.querySelector('.description').innerText = updatedGameDescription.value;
-                gameContainer.querySelector('.imageUrl').src = updatedGameImageUrl.value;
+                gameContainerElement.querySelector('h1').innerText = updatedGameTitle.value;
+                gameContainerElement.querySelector('.description').innerText = updatedGameDescription.value;
+                gameContainerElement.querySelector('.imageUrl').src = updatedGameImageUrl.value;
                 removeDeletedElementFromDOM(formElement);
             }
             
             if (updatedGameTitle.value !== oldTitle || updatedGameDescription.value !== oldDescription || updatedGameImageUrl.value !== oldImageURL){
                 (async function() {
-                    const editGameResponse = await editGame(gameContainer.id, urlencoded);
+                    const editGameResponse = await editGame(gameContainerElement.id, urlencoded);
                     return editGameResponse;
                 })();
             }

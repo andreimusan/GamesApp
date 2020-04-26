@@ -3,48 +3,41 @@
     padding: 0;
     box-sizing: border-box;
 }
-h1.myh {
-    text-align: center;
-    color: #333333;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 30px;
-    text-shadow: 1px 1px 3px #333333;
-    border-bottom: 5px solid #333333;
-    margin-bottom: 50px;
-    padding-bottom: 10px;
+
+button {
+    margin: 10px;
 }
+
 .delete-btn {
-    width: 120px;
-    height: 40px;
-    padding: 5px 10px;
-    border-radius: 5px;
-    background-color: #E74C3C;
-    font-weight: bold;
+    width: 100px;
+    height: 20px;
+    background-color: red;
     border: none;
     color: white;
+    cursor: pointer;
+    margin-left: 0;
 }
-.editBtn {
-    width: 120px;
-    height: 40px;
-    border-radius: 5px;
-    font-weight: bold;
-    background-color:#16A085;
+
+.edit-btn {
+    width: 100px;
+    height: 20px;
+    background-color: deepskyblue;
     border: none;
     color: white;
+    cursor: pointer;
 }
+
 .submitBtn {
-    width: 120px;
-    height: 40px;
-    border-radius: 5px;
-    font-weight: bold;
-    background-color: #2ECC71;
+    width: 100px;
+    height: 20px;
+    background-color: green;
     border: none;
     color: white;
 }
 
 img {
     width: 90px;
-    float:left;
+    float: left;
     margin: 10px;
 }
 
@@ -55,10 +48,6 @@ h1 {
     margin-bottom: 10px;
 }
 
-button {
-    margin: 10px;
-}
-
 .creationForm {
     display: flex;
     flex-direction: column;
@@ -67,9 +56,8 @@ button {
 .creationForm>label,
 .creationForm>input,
 .creationForm>textarea,
-.creationForm>select
- {
-    display: block;
+.creationForm>select {
+    float: left;
     margin: 5px 10px;
 }
 
@@ -84,47 +72,71 @@ button {
     font-size: 14px;
 }
 
-#updateForm {
-   border: 1px solid #333;
-   padding: 20px;
-   display: flex;
-   flex-direction: column;
-   margin: 5px;
+.updateForm {
+    display: flex;
+    flex-direction: column;
 }
-.updateBtn{
-    width: 120px;
-    height: 40px;
-    border-radius: 5px;
-    font-weight: bold;
-    background-color: #3498DB;
-    border: none;
-    color: white;
+
+.updateForm>label,
+.updateForm>input,
+.updateForm>textarea {
+    float: left;
+    margin: 5px 10px;
+    font-family: 'Times New Roman', Times, serif;
     
-   
 }
-.cancelBtn{
-    width: 120px;
-    height: 40px;
-    border-radius: 5px;
-    font-weight: bold;
-    background-color: #E74C3C;
-    border: none;
+
+.updateForm>textarea {
+    height: 100px;
+    padding: 0 0.2rem;
+}
+
+.updateForm>input {
+    padding: 0 0.2rem;
+}
+
+.updateBtn {
+    width: 100px;
+    height: 20px;
+    background-color: transparent;
+    border: 1px solid green;
+    color: green;
+}
+
+.updateBtn:hover {
+    width: 100px;
+    height: 20px;
+    background-color: green;
+    border: 1px solid green;
     color: white;
 }
 
-#updateForm>label,
-#updateForm>input,
-#updateForm>textarea,
-#updateForm>select
- {
-    display: block;
-    margin-left: 5px;
-    padding: 5px 10px;
+.cancelBtn {
+    width: 100px;
+    height: 20px;
+    background-color: transparent;
+    border: 1px solid red;
+    color: red;
 }
 
-#updateForm > textarea {
-    height: 150px;
+.cancelBtn:hover {
+    width: 100px;
+    height: 20px;
+    background-color: red;
+    border: 1px solid red;
+    color: white;
 }
-#updateForm>label {
-    font-weight: bold;
+
+.container {
+    margin: 0 10px;
+}
+
+/* for view2.js */
+.updateForm span {
+    color: red;
+    margin: 0 10px;
+    border: 1px solid red;
+    border-radius: 5px;
+    padding: 10px;
+    align-self: flex-start;
 }

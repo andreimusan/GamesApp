@@ -1,8 +1,8 @@
-function fetchAPI(serverURL) {
+function FetchAPI(serverURL) {
     this.serverURL = serverURL;
 }
 
-fetchAPI.prototype.getGameList = function() {
+FetchAPI.prototype.getGameList = function() {
     return fetch(`${this.serverURL}/games`,{
         method: 'GET',
         headers: {
@@ -12,9 +12,9 @@ fetchAPI.prototype.getGameList = function() {
         //console.log('Raspuns de la server: ', response);
         return response.json();
     })
-} 
+}
 
-fetchAPI.prototype.deleteGame = function(gameID) {
+FetchAPI.prototype.deleteGame = function(gameID) {
     return fetch(`${this.serverURL}/games/${gameID}`, {
         method: 'DELETE'
     }).then(function(response) {
@@ -33,7 +33,7 @@ fetchAPI.prototype.deleteGame = function(gameID) {
     })
 }
 
-fetchAPI.prototype.createGameRequest = function(gameObj) {
+FetchAPI.prototype.createGameRequest = function(gameObj) {
     return fetch(`${this.serverURL}/games`, {
         method: 'POST',
         headers: {
@@ -45,7 +45,7 @@ fetchAPI.prototype.createGameRequest = function(gameObj) {
     })
 }
 
-fetchAPI.prototype.editGame = function(id,gameObj) {
+FetchAPI.prototype.editGame = function(id,gameObj) {
     return fetch(`${this.serverURL}/games/${id}`, {
         method: 'PUT',
         headers: {
@@ -58,7 +58,7 @@ fetchAPI.prototype.editGame = function(id,gameObj) {
         return response.json()
     })
 }
-fetchAPI.prototype.reloadDB = function() {
+FetchAPI.prototype.reloadDB = function() {
     return fetch(`${this.serverURL}/regenerate-games`, {
         method: 'GET',
         headers: {
