@@ -1,6 +1,6 @@
 const apiServer = new FetchAPI('https://games-app-siit.herokuapp.com');
 
-const gamesFromServer = async () => {
+async function gamesFromServer(){
     const arrayOfGames = await apiServer.getGameList();
     for(let i = arrayOfGames.length-1; i >= 0 ; i--) {
         const gameObj = arrayOfGames[i];
@@ -29,13 +29,13 @@ const gamesFromServer = async () => {
                 } 
             } else if (event.target.classList.contains('edit-btn')) {
                 createEditForm(event.target.parentElement)                    
-        }   
+            }   
         });
     }
 }
 gamesFromServer();
 
-const createEditForm = gameContainer => {
+function createEditForm(gameContainer) {
     
     if (!gameContainer.querySelector('#updateForm')) {
 
@@ -91,7 +91,7 @@ const createEditForm = gameContainer => {
             }
             
             if (updatedGameTitle.value !== oldTitle || updatedGameDescription.value !== oldDescription || updatedGameImageUrl.value !== oldImageURL){
-                (async () => {
+                (async function() {
                     const gameEditor = await apiServer.editGame(gameContainerElement.id, urlencoded);
                     return gameEditor;
                 })();
@@ -143,7 +143,7 @@ document.querySelector(".submitBtn").addEventListener("click", event => {
     }
 });
 
-const displayCreatedGame = async urlencoded => {
+async function displayCreatedGame(urlencoded) {
     const request = await apiServer.createGameRequest(urlencoded);
      
     const game = new Game(request._id,
@@ -173,7 +173,7 @@ const displayCreatedGame = async urlencoded => {
     }); 
 }
 
-const reload = async () => {
+async function reload() {
     const reloadDataBase = document.createElement('button');
     reloadDataBase.setAttribute('class', 'reloadDB');
     reloadDataBase.innerHTML = "Reload DataBase";
@@ -191,7 +191,7 @@ const reload = async () => {
 
         const alertBox = confirm("Do you really want to reload DataBase ?")
         if (alertBox === true) {   
-            (async () => {
+            (async function() {
                 const dbLoader = await apiServer.reloadDB();
                 console.log(dbLoader);
                 
@@ -200,5 +200,4 @@ const reload = async () => {
         }
     });
 }
-
 reload();
